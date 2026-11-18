@@ -1,0 +1,20 @@
+name: MicroMDM commit policy
+description: >-
+  Checks pull request commits against the commit message rules in the
+  MicroMDM contributing guide (https://github.com/micromdm/.github/blob/main/CONTRIBUTING.md).
+inputs:
+  token:
+    description: GitHub token used to fetch the pull request's commits.
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        TOKEN: ${{ inputs.token }}
+        EVENT_NAME: ${{ github.event_name }}
+        SERVER_URL: ${{ github.server_url }}
+        REPO: ${{ github.repository }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      run: '"$GITHUB_ACTION_PATH/check.sh"'
